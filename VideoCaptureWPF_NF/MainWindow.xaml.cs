@@ -1,31 +1,40 @@
 ﻿using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
+using System;
 using System.ComponentModel;
+using System.Runtime.InteropServices.ComTypes;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using Hompus.VideoInputDevices;
+
 
 namespace VideoCaptureWPF_NF
 {
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : System.Windows.Window
     {
-        private readonly VideoCapture capture;
+        private VideoCapture capture;
         //private readonly CascadeClassifier cascadeClassifier;
-
-        private readonly BackgroundWorker bkgWorker;
+        private BackgroundWorker bkgWorker;
 
         public MainWindow()
         {
             InitializeComponent();
-            capture = new VideoCapture();
+            var sde = new SystemDeviceEnumerator();
+            System.Collections.Generic.IReadOnlyDictionary<int, string> devices = sde.ListVideoInputDevice();
+
+            cboDevice.ItemsSource = devices;
+
+            capture = new VideoCapture();                      
 
             //cascadeClassifier = new CascadeClassifier("haarcascade_frontalface_default.xml");
 
-            bkgWorker = new BackgroundWorker { WorkerSupportsCancellation = true };
-            bkgWorker.DoWork += Worker_DoWork;
+          
 
             Loaded += MainWindow_Loaded;
             Closing += MainWindow_Closing;
@@ -33,14 +42,14 @@ namespace VideoCaptureWPF_NF
 
         private void MainWindow_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            capture.Open(0, VideoCaptureAPIs.ANY);
-            if (!capture.IsOpened())
-            {
-                Close();
-                return;
-            }
+            //capture.Open(0, VideoCaptureAPIs.ANY);
+            //if (!capture.IsOpened())
+            //{
+            //    Close();
+            //    return;
+            //}
 
-            bkgWorker.RunWorkerAsync();
+            //bkgWorker.RunWorkerAsync();
         }
 
         private void MainWindow_Closing(object sender, CancelEventArgs e)
@@ -75,5 +84,40 @@ namespace VideoCaptureWPF_NF
                 Thread.Sleep(30);
             }
         }
+
+        private void cboDevice_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cboDevice.SelectedItem != null)
+            {
+                var wSelectedDevice = (System.Collections.Generic.KeyValuePair<int, string>)cboDevice.SelectedItem;
+                if (wSelectedDevice is System.Collections.Generic.KeyValuePair<int, string>)
+                {
+                    if (capture.IsOpened())
+                    {
+                        bkgWorker.CancelAsync();
+                        bkgWorker.DoWork -= Worker_DoWork;
+                        bkgWorker.Dispose();
+                        capture.Dispose();
+                        Thread.Sleep(30);                        
+                        capture = new VideoCapture();
+                    }
+
+                    capture.Open(wSelectedDevice.Key, VideoCaptureAPIs.DSHOW);
+                    if (!capture.IsOpened())
+                    {
+                        capture = new VideoCapture();
+                        return;
+                    }
+
+                    bkgWorker = new BackgroundWorker { WorkerSupportsCancellation = true };
+                    bkgWorker.DoWork += Worker_DoWork;
+                    bkgWorker.RunWorkerAsync();
+                }
+            }
+        }
     }
+
+
+
+
 }

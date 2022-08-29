@@ -7,6 +7,11 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Image x:Name="FrameImage"></Image>
+        <StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <ComboBox Name="cboDevice" SelectionChanged="cboDevice_SelectionChanged" />
+            </StackPanel>
+            <Image x:Name="FrameImage"></Image>
+        </StackPanel>
     </Grid>
 </Window>
