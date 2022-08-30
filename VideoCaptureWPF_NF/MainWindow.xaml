@@ -3,15 +3,76 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ControlLib="clr-namespace:ControlLib;assembly=NumericUpDown" 
         xmlns:local="clr-namespace:VideoCaptureWPF_NF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Image Capture Tool" Height="450" Width="800">
     <Grid>
         <StackPanel>
-            <StackPanel Orientation="Horizontal">
+            <StatusBar>
+                <StatusBar.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                        </Grid>
+                    </ItemsPanelTemplate>
+                </StatusBar.ItemsPanel>
+                <StatusBarItem Grid.Column="0">
+                    <TextBlock Name="lblAppName" Text="Image Capture Tool 1.00" Grid.Column="0"/>
+                </StatusBarItem>
+                <StatusBarItem Margin="5 0 0 0" Grid.Column="1">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Camera:"/>
+                        <TextBlock Margin="2 0 0 0" Name="txtStatus" Text="Select camera" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </StatusBarItem>
+                <StatusBarItem Margin="5 0 0 0"  Grid.Column="2">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Tic:"/>
+                        <TextBlock Margin="2 0 0 0" VerticalAlignment="Center"  Name="txtTicStatus" Text="Not connected" />
+                    </StackPanel>
+                </StatusBarItem>
+                <StatusBarItem Margin="5 0 0 0" Grid.Column="3">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Error:"/>
+                        <TextBlock Margin="0" VerticalAlignment="Center"  Name="txtError" Text="" />
+                    </StackPanel>
+                </StatusBarItem>
+                <StatusBarItem Margin="5 0 0 0" Grid.Column="4">                                        
+                    <TextBlock Margin="0" VerticalAlignment="Center"  Name="txtActivity" Text="" />                  
+                </StatusBarItem>
+            </StatusBar>
+            <StackPanel Name="spControls" Orientation="Horizontal">
+                <Label Content="Video Devices:"/>
                 <ComboBox Name="cboDevice" SelectionChanged="cboDevice_SelectionChanged" />
-            </StackPanel>
-            <Image x:Name="FrameImage"></Image>
+                <Label Margin="10 0 0 0" Content="Steps"/>
+                <ControlLib:NumericUpDown Name="UpSteps" Margin="3 0 0 0" Value="3" Increment="1" MaxValue="10000" Width="50" />
+                <Label Content="Stop At"/>
+                <ControlLib:NumericUpDown Name="UpStop" Margin="3 0 0 0" Value="1000" Increment="1" MaxValue="10000" Width="50" />
+                <Label Content="Speed"/>
+                <ControlLib:NumericUpDown Name="UpSpeed" Margin="3 0 0 0" Value="5000000" Increment="1" MaxValue="10000" Width="50" />
+                <Button Margin="10 0 0 0" Content="Start" Name="btnStart" Click="btnStart_Click"/>
+                <Button Margin="3 0 0 0" Content="Stop" Name="btnStop" Click="btnStop_Click"/>
+                <Button Margin="10 0 0 0" Content="Connect" Name="btnConnect" Click="btnConnect_Click"/>
+                <Button Margin="3 0 0 0" Content="Disconnect" Name="btnDisconnect" Click="btnDisconnect_Click"/>
+                <Label Content="Step Mode:"/>
+                <RadioButton Tag="0" Margin="5 0 0 0" GroupName="StepMode" Content="Full"   VerticalContentAlignment="Center"/>
+                <RadioButton Tag="1" Margin="7 0 0 0" GroupName="StepMode" Content="Half"   VerticalContentAlignment="Center"/>
+                <RadioButton Tag="2" Margin="7 0 0 0" GroupName="StepMode" Content="1/4" IsChecked="True" VerticalContentAlignment="Center"/>
+                <RadioButton Tag="3" Margin="7 0 0 0" GroupName="StepMode" Content="1/8"   VerticalContentAlignment="Center"/>
+                <RadioButton Tag="4" Margin="7 0 0 0" GroupName="StepMode" Content="1/16"   VerticalContentAlignment="Center"/>
+                <RadioButton Tag="5" Margin="7 0 0 0" GroupName="StepMode" Content="1/32"  VerticalContentAlignment="Center"/>
+                <RadioButton Tag="7" Margin="7 0 0 0" GroupName="StepMode" Content="1/64"   VerticalContentAlignment="Center"/>
+                <RadioButton Tag="8" Margin="7 0 0 0" GroupName="StepMode" Content="1/128"   VerticalContentAlignment="Center"/>
+                <RadioButton Tag="9" Margin="7 0 0 0" GroupName="StepMode" Content="1/256"   VerticalContentAlignment="Center"/>                
+            </StackPanel>            
+            <Image x:Name="FrameImage"></Image>            
         </StackPanel>
     </Grid>
 </Window>

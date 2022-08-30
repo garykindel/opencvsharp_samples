@@ -6,6 +6,7 @@ Nuget packages
 Install-Package Hompus.VideoInputDevices -Version 0.5.0
 Install-Package OpenCvSharp4 -Version 4.6.0.20220608
 Install-Package OpenCvSharp4.WpfExtensions -Version 4.6.0.20220608
+Install-Package LibUsbDotNet -Version 2.2.29
 
 Copied the following files  (from VideoCaptureWPF example)
 haarcascade_frontalface_default.xml not used script for finding face in video stream
